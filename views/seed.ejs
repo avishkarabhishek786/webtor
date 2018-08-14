@@ -1,0 +1,17 @@
+<%include partials/header.ejs %>
+
+<div class="container">
+    <p id='#drag'>hello</p>
+    <div class="card drop-div" id="_drop"></div>  
+
+    <div class="card">
+        <div id="seed-result"></div>
+    </div>
+
+</div>
+
+<%include partials/footer.ejs %>
+<script>
+    //const funcs = require('./public/js/main')
+    funcs.seedTorrent()
+</script>
