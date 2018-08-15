@@ -31,7 +31,7 @@
     "watch": "watchify public/js/main.js -o public/js/bundle.js",
     "prestart": "npm run build",
     "start": "nodemon --ignore public/js/bundle.js index.js",
-    "poststart": "npm run watch"
+    "poststart":"npm run watch"
   },
   "author": "",
   "license": "ISC"

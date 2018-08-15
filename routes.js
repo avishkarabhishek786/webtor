@@ -3,7 +3,6 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator/check')
 const { matchedData } = require('express-validator/filter')
 const _ = require('lodash');
-//const fetch = require('node-fetch');
 
 var path = require('path')
 var fs = require('fs');
