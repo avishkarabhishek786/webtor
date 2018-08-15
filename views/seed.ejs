@@ -26,7 +26,7 @@ let seeding = () => {
         console.log('Here is the list of directories:', directories)
     
         var client = new WebTorrent()
-        
+
         client.seed(files, function (torrent) {
             console.log(torrent);
             console.log('Client is seeding ' + torrent.magnetURI)

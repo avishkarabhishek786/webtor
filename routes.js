@@ -31,4 +31,12 @@ router.get('/download', (req, res)=>{
     })
 })
 
+router.get('/download-magnetic-uri', (req, res)=>{
+    res.render('magnetic.ejs', {
+        data: {},
+        errors: {},
+        title: 'Download Magnetic URI!'
+    })
+})
+
 module.exports = router

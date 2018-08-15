@@ -9,6 +9,7 @@
 }
 
 footer {
+    margin-top: 20px;   
     position:fixed;
     bottom:0;
     left:0;
@@ -55,4 +56,13 @@ footer {
   a:link, a:visited {
       color: #30a247;
       text-decoration: none;
+  }
+
+  #mag-res {
+    height: 500px;
+    width: auto;
+  }
+
+  .pd-10 {
+      padding: 10px 10px;
   }

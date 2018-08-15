@@ -37,10 +37,6 @@
 
 <script>
 
-    function file_ext(file) {
-        return filename.substring(filename.lastIndexOf('.')+1, filename.length) || filename;
-    }
-
 //http://www.ytsyify.org/[EZTV]/(eztvtorrent.net)%20The%20Originals%20(S05E04)%20(480p).torrent
     $(document).on('click', '#btn-download', function() {
         var torrentId = $('#torrent_url').val();
@@ -77,11 +73,17 @@
                     return file.name.endsWith('.pdf')    
                 } else if (file.name.endsWith('.mp3')) {
                     return file.name.endsWith('.mp3')    
+                } else if (file.name.endsWith('.jpg')) {
+                    return file.name.endsWith('.jpg')    
+                } else if (file.name.endsWith('.png')) {
+                    return file.name.endsWith('.png')    
+                } else if (file.name.endsWith('.gif')) {
+                    return file.name.endsWith('.gif')    
                 }       
             })
 
         if (typeof file==undefined) {
-            alert("Unsupported files: Torrent file must contain .mp4, .webm, .avi, .pdf or .mp3 file only.");
+            alert("Unsupported files: Torrent file must contain .mp4, .webm, .avi, .pdf, .jpg, .png, .gif or .mp3 file only.");
             return false;
         }
 
