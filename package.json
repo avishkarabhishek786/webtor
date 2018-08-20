@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "bitcoin-core": "^2.0.0",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.1.3",
     "browserify": "^16.2.2",
@@ -31,7 +32,7 @@
     "watch": "watchify public/js/main.js -o public/js/bundle.js",
     "prestart": "npm run build",
     "start": "nodemon --ignore public/js/bundle.js index.js",
-    "poststart":"npm run watch"
+    "poststart": "npm run watch"
   },
   "author": "",
   "license": "ISC"

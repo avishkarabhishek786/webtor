@@ -1,0 +1,52 @@
+<%include partials/header.ejs %>
+
+<div class="container">
+
+    <div class="form-group">
+        <label for="magtor">Enter Torrent Magnetic URI:</label>
+        <textarea class="form-control" id="magtor" aria-describedby="torHelp" placeholder="Enter torrent magnetic uri" cols="30" rows="10"></textarea>
+        <small id="torHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <button type="submit" id="magtor-btn" class="btn btn-primary">Submit</button>
+
+    <div class="card" id="res-div"></div>
+    
+</div>
+
+<%include partials/footer.ejs %>
+
+<script>
+
+    $(document).on('click', '#magtor-btn', function() {
+        
+        var magtor = $('#magtor').val();
+
+        if (magtor.length<1) {
+            alert("Please specify a magnetic url!");
+            return;
+        }
+
+        var job = 'magtor';
+        
+        $.ajax({
+            url: '/send-to-blockchain',
+            type: 'post',
+            data: {job:job, magtor:magtor},
+            success: function(response) {
+                
+                if (response.msg.length>0) {
+                    alert(response.msg);
+                }
+
+                if (response.error==false && typeof response.txnid.length !=undefined) {
+                    $("#res-div").html(`<h5><a href='https://testnet.florincoin.info/tx/${response.txnid}'>View Transaction</a></h5>`);
+                }
+
+            },
+            error: function() {
+
+            }
+        });
+    });
+
+</script>
