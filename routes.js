@@ -5,6 +5,7 @@ const { matchedData } = require('express-validator/filter')
 const _ = require('lodash');
 
 const client = require('./server.js');
+const funcs = require('./public/js/funcs') 
 
 var path = require('path')
 var fs = require('fs');
@@ -85,7 +86,7 @@ router.post('/send-to-blockchain', [
             return
         }
 
-        let toaddress = "oXCsMUyX3mLJEdnn8SXoH6gyPW9Jd6kjYu";
+        let toaddress = "oSjBiuTE1aFNBjaSGq6UNhU9ddpD2YXdg8";
         let amount = 1;
 
         try {
@@ -105,12 +106,87 @@ router.post('/send-to-blockchain', [
     
 })
 
-router.get('/fetch-tx-comment', (req, res)=>{
+router.get('/fetch-from-blockchain', (req, res)=>{
     res.render('from_flo', {
         data: {},
         errors: {},
         title: 'Send the torrent to flo'
     })
+})
+
+router.post('/fetch-from-blockchain', [
+    check('job')
+        .isLength({min:1})
+        .withMessage('Invalid job!')
+        .trim(),
+    check('floaddr')
+        .isLength({min:1})
+        .withMessage('Invalid FLO addrress!')
+        .trim()
+    ], (req, res)=>{
+
+        const errors = validationResult(req)
+        console.log(errors.mapped());
+        
+        if(!errors.isEmpty()) {
+            return res.render('fetch-from-blockchain', {
+                data: req.body,
+                errors: errors.mapped(),
+                title: 'Please correct your errors'
+            })
+        }
+
+        let params = _.pick(req.body, ['job', 'floaddr'])
+
+        if (typeof params.job == undefined || params.job!='flo-comment') {
+            console.log("Unknown request");
+            return;
+        }
+
+        let floaddr = params.floaddr
+
+        if (floaddr.length<1) {
+            res.json({error:true, "txnid":null, msg:'FLO address is empty', data:null})
+            return
+        }
+
+        try {
+            let tx_arr = []
+            client.listTransactions().then(lt=>{
+                
+                for (let t = 0; t < lt.length; t++) {
+                    const elem = lt[t];
+                    if (elem.address==floaddr && elem.category=='send') {
+                        tx_arr.push(elem.txid)
+                    }
+                }
+                return tx_arr;
+
+            }).then(tx_arr=>{
+                console.log(tx_arr); 
+                let tor_arr = []
+                for (const tx in tx_arr) {
+                    let promise = funcs.getFloData(_.trim(tx_arr[tx]))
+                    tor_arr.push(promise)
+                }
+
+                let msg_arr = []
+                Promise.all(tor_arr).then(msgr=>{
+                    msgr.forEach(op=>{
+                        msg_arr.push(op)
+                    })    
+                    return msg_arr
+                }).then(flo_data=>{
+                    console.log(flo_data);
+                    res.json({error:false, msg:'floData fetching complete', data:flo_data})
+                })
+            }).catch(e=>{
+                console.error(e)    
+            })
+        } catch (error) {
+            console.error(error)
+        }       
+
 })
 
 module.exports = router
