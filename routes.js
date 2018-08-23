@@ -4,7 +4,6 @@ const { check, validationResult } = require('express-validator/check')
 const { matchedData } = require('express-validator/filter')
 const _ = require('lodash');
 
-const client = require('./server.js');
 const funcs = require('./public/js/funcs') 
 
 var path = require('path')
