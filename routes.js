@@ -71,7 +71,7 @@ router.post('/download-magnetic-uri', (req, res)=>{
         var length = files.length
         // Stream each file to the disk
         files.forEach(function (file) {
-            console.log(file);
+            //console.log(file);
             
             let fullpath = path.resolve(file.path)
             

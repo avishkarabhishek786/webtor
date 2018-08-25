@@ -5,6 +5,7 @@
     <div class="card drop-div" id="_drop"></div>  
 
     <div class="card">
+        <p id="dw-file"></p>
         <div id="seed-result"></div>
     </div>
 
@@ -30,6 +31,8 @@ let seeding = () => {
         client.seed(files, function (torrent) {
             console.log(torrent);
             console.log('Client is seeding ' + torrent.magnetURI)
+
+            let file_string = torrent.torrentFile.toString('hex');
     
             let t = ``;
     
@@ -60,9 +63,17 @@ let seeding = () => {
             }
     
             $("#seed-result").html(t);
-            
+
+            document.getElementById('dw-file').innerHTML = '<a href="' + torrent.torrentFileBlobURL + '" target="_blank" download="file.torrent">[Download .torrent]</a>';
+
         })
     })
 }
+
+$(document).on('click', "#dwldspan", function() {
+    var loc = $(this).val();
+    console.log(loc);
+    window.location(loc)
+})
 
 </script>
