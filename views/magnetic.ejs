@@ -19,55 +19,41 @@
 
     $(document).on('click', '#dwn-seed', function() {
         
-        var client = new WebTorrent()
+        //  var client = new WebTorrent()
 
-        var torrentId = document.getElementById('mag_text').value;
+        //  client.on('error', function (err) {
+        //     console.error('ERROR: ' + err.message)
+        //  })
 
-        if (torrentId.trim() == '') {
-            alert("Please specify a magnetic url.");
-            return;
-        }
+         var torrentId = document.getElementById('mag_text').value;
 
-        client.add(torrentId, function (torrent) {
-        // Torrents can contain many files. Let's use the .mp4 file
-        var file = torrent.files.find(function (file) {
-            console.log(file);
-            if (file.name.endsWith('.mp4')) {
-                return file.name.endsWith('.mp4')    
-            } else if (file.name.endsWith('.webm')) {
-                return file.name.endsWith('.webm')    
-            } else if (file.name.endsWith('.avi')) {
-                return file.name.endsWith('.avi')    
-            } else if (file.name.endsWith('.pdf')) {
-                return file.name.endsWith('.pdf')    
-            } else if (file.name.endsWith('.mp3')) {
-                return file.name.endsWith('.mp3')    
-            } else if (file.name.endsWith('.jpg')) {
-                return file.name.endsWith('.jpg')    
-            } else if (file.name.endsWith('.png')) {
-                return file.name.endsWith('.png')    
-            } else if (file.name.endsWith('.gif')) {
-                return file.name.endsWith('.gif')    
-            } else if (file.name.endsWith('.jpeg')) {
-                return file.name.endsWith('.jpeg')    
-            } 
-        })
+         if (torrentId.trim() == '') {
+             alert("Please specify a magnetic url.");
+             return;
+         }
 
-        console.log('Client is downloading:', torrent.infoHash)
-        
-        // Display the file by adding it to the DOM. Supports video, audio, image, etc. files
-        file.appendTo('#mag-res')
+         var job = 'download-magnetic-uri';
 
-        file.getBlobURL(function (err, url) {
-            if (err) throw err
-            var a = document.createElement('a')
-            a.download = file.name
-            a.href = url
-            a.textContent = 'Download ' + file.name
-            document.getElementById("dwld").appendChild(a)
-        })
+         $.ajax({
+             url: '/download-magnetic-uri',
+             type: 'post',
+             data: {job:job, torrentId:torrentId},
+             success: function(response) {
+                 console.log(response);
+                 if (typeof response.file != undefined) {
+                    let file = response.file;
+                    var a = document.createElement('a')
+                        a.download = `files/${response.file}`
+                        a.href = response.location
+                        a.textContent = 'Download ' + response.file
+                        document.getElementById("dwld").appendChild(a)
+                 }
 
-        })
+             }, 
+             error: function(e) {
+                 console.error(e);
+             }
+         });
 
     });
 

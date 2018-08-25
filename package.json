@@ -21,7 +21,8 @@
     "npm": "^6.3.0",
     "popper.js": "^1.14.4",
     "watchify": "^3.11.0",
-    "webtorrent": "^0.102.1"
+    "webtorrent": "^0.102.1",
+    "webtorrent-hybrid": "^1.0.6"
   },
   "devDependencies": {
     "nodemon": "^1.18.3"

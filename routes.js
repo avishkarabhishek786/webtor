@@ -3,6 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator/check')
 const { matchedData } = require('express-validator/filter')
 const _ = require('lodash');
+const WebtorrentHybrid = require('webtorrent-hybrid')
 
 const client = require('./server.js');
 const funcs = require('./public/js/funcs') 
@@ -40,6 +41,56 @@ router.get('/download-magnetic-uri', (req, res)=>{
         errors: {},
         title: 'Download Magnetic URI!'
     })
+})
+
+router.post('/download-magnetic-uri', (req, res)=>{
+
+    let params = _.pick(req.body, ['job', 'torrentId']) 
+
+    if (params.job != 'download-magnetic-uri') {
+        return
+    }
+
+    var client = new WebtorrentHybrid()
+
+    client.on('error', function (err) {
+       console.error('ERROR: ' + err.message)
+    })
+
+    var torrentId = params.torrentId
+
+    if (_.trim(torrentId) == '') {
+        //alert("Please specify a magnetic url.");
+        console.error("Empty torrent id");
+        return;
+    }
+
+    client.add(torrentId, function (torrent) {
+
+        var files = torrent.files
+        var length = files.length
+        // Stream each file to the disk
+        files.forEach(function (file) {
+            console.log(file);
+            
+            let fullpath = path.resolve(file.path)
+            
+            var source = file.createReadStream()
+            var destination = fs.createWriteStream(`files/${file.name}`)
+            source.on('end', function () {
+            console.log('file:\t\t', file.name)
+
+            //console.log(destination);
+            //res.json({file:file.name, location:fullpath})
+            res.json({file:file.name, location:fullpath})
+            // close after all files are saved
+            if (!--length) process.exit()
+            }).pipe(destination) 
+            
+        })
+
+    })
+
 })
 
 router.get('/send-to-blockchain', (req, res)=>{
@@ -156,7 +207,7 @@ router.post('/fetch-from-blockchain', [
                 
                 for (let t = 0; t < lt.length; t++) {
                     const elem = lt[t];
-                    if (elem.address==floaddr && elem.category=='send') {
+                    if (elem.address==floaddr && elem.category=='receive') {
                         tx_arr.push(elem.txid)
                     }
                 }
