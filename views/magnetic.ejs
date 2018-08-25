@@ -33,18 +33,37 @@
              type: 'post',
              data: {job:job, torrentId:torrentId},
              success: function(response) {
-                 console.log(response);
-                 if (typeof response.file != undefined) {
-                    let file = response.file;
-                    // var a = document.createElement('a')
-                    //     a.download = `files/${response.file}`
-                    //     //a.href = response.location
-                    //     a.href = `/files/${response.file}`
-                    //     a.textContent = 'Download ' + response.file
-                    //     document.getElementById("dwld").appendChild(a)
-                    console.log('ok');
-                    window.open(response.location);
-                 }
+                 
+                // if (typeof response.file != undefined) {
+                //     let file = response.file;
+                //     var a = document.createElement('a')
+                //         filename = response.file;
+                //         uri = `file://${response.location}`;
+                       
+                //         var link = document.createElement('a');
+        
+                //         if (typeof link.download === 'string') {
+                //             console.log("a");
+                            
+                //             link.href = uri;
+                //             link.download = filename;
+
+                //             //Firefox requires the link to be in the body
+                //             document.getElementById("dwld").appendChild(link);
+
+                //             //simulate click
+                //             link.click();
+
+                //             //remove the link when done
+                //             document.getElementById("dwld").removeChild(link);
+                //             console.log("aa")
+                //         } else {
+                //             console.log("b");
+                //             window.open(uri);
+                //         }
+                //  }
+
+                    document.getElementById('dwld').innerHTML = `<a href="file://${response.location}" target="_blank" download onclick="window.open('file://${response.location}')">[Download .torrent]</a>`;
 
              }, 
              error: function(e) {

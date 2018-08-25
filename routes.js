@@ -11,6 +11,8 @@ const funcs = require('./public/js/funcs')
 var path = require('path')
 var fs = require('fs');
 
+//const JSON = require('circular-json');
+
 router.get('/', (req, res)=>{
     res.render('index.ejs', {
         data: {},
@@ -71,20 +73,19 @@ router.post('/download-magnetic-uri', (req, res)=>{
         var length = files.length
         // Stream each file to the disk
         files.forEach(function (file) {
-            //console.log(file);
-            
-            let fullpath = path.resolve(file.path)
-            
+            //console.log(file._torrent.path);
+        
             var source = file.createReadStream()
             var destination = fs.createWriteStream(`files/${file.name}`)
-            source.on('end', function () {
-            console.log('file:\t\t', file.name)
 
-            //console.log(destination);
-            //res.json({file:file.name, location:fullpath})
-            res.json({file:file.name, location:fullpath})
-            // close after all files are saved
-            if (!--length) process.exit()
+            let fullpath = path.resolve(`files/${file.name}`)
+            
+            source.on('end', function () {
+                console.log('file:\t\t', file.name)
+
+                res.json({file:file.name, location:fullpath})
+                // close after all files are saved
+                if (!--length) process.exit()
             }).pipe(destination) 
             
         })
