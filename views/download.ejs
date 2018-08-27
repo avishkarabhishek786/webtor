@@ -90,6 +90,14 @@
         // Stream the file in the browser
         file.appendTo('#output')
 
+        torrent.on('done', function (file) {
+            // Seed file
+            client.seed(file, function (tor) {
+                console.log(tor);
+                console.log('Client is seeding ' + tor.magnetURI)
+            })
+        })
+
         // Trigger statistics refresh
         torrent.on('done', onDone)
         setInterval(onProgress, 500)

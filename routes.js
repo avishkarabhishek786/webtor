@@ -83,7 +83,14 @@ router.post('/download-magnetic-uri', (req, res)=>{
             source.on('end', function () {
                 console.log('file:\t\t', file.name)
 
+                // Seed file
+                client.seed(file, function (tor) {
+                    console.log(tor);
+                    console.log('Client is seeding ' + tor.magnetURI)
+                })
+
                 res.json({file:file.name, location:fullpath})
+
                 // close after all files are saved
                 if (!--length) process.exit()
             }).pipe(destination) 
