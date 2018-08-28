@@ -40,15 +40,17 @@ let seeding = () => {
     
             t += `<p>Name: ${torrent.name}</p>`;
             t += `<p>Path: ${torrent.path}</p>`;
+            t += `<p><strong>peerId: ${torrent.client.peerId}</strong></p>`;
+            t += `<p><strong>infoHash: ${torrent.infoHash}</strong></p>`;
             var hexdata = torrent.torrentFile.toString('hex');
             t += `<p>Torrent: ${hexdata}</p>`;
             t += `<p></p>`;
     
-            t += `<h5>Files hash</h5>`;
-            for (let h = 0; h < torrent._hashes.length; h++) {
-                const hash = torrent._hashes[h];
-                t += `<p>${hash}</p>`;
-            }
+            // t += `<h5>Files hash</h5>`;
+            // for (let h = 0; h < torrent._hashes.length; h++) {
+            //     const hash = torrent._hashes[h];
+            //     t += `<p>${hash}</p>`;
+            // }
     
             t += `<h5>Peers</h5>`;
             for (let p = 0; p < torrent._peers.length; p++) {

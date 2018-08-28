@@ -1,7 +1,7 @@
 <%include partials/header.ejs %>
 
 <div class="container">
-
+    <!-- duckdns-> oVrbkDUrX727MjQd4zq7nRw1XEHkkpGErE -->
     <label for="flo-addr">Enter the flo address (oSjBiuTE1aFNBjaSGq6UNhU9ddpD2YXdg8)</label>
     <input type="text" id="flo-addr" class="form-control" />
 
@@ -24,8 +24,6 @@
 <%include partials/footer.ejs %>
 
 <script>
-
-
     $(document).on('click', '#flo-addr-btn', function() {
         var floaddr = $("#flo-addr").val();
         if (floaddr.length<1) {

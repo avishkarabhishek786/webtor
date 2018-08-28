@@ -11,6 +11,9 @@ const funcs = require('./public/js/funcs')
 var path = require('path')
 var fs = require('fs');
 
+var Tracker = require('bittorrent-tracker')
+var magnet = require('magnet-uri')
+
 //const JSON = require('circular-json');
 
 router.get('/', (req, res)=>{
@@ -245,6 +248,44 @@ router.post('/fetch-from-blockchain', [
         } catch (error) {
             console.error(error)
         }       
+
+})
+
+router.get('/trackers-list', (req, res)=>{
+    res.render('trackers-list', {
+        data: {},
+        errors: {},
+        title: 'Trackers List'
+    })
+})
+
+router.post('/trackers-list', (req, res)=>{
+    let params = _.pick(req.body, ['job', 'mag_url', 'pid'])
+    if (params.job!=="track list") {
+        return;
+    }
+
+    let magnetURI = params.mag_url
+    let peer_id = params.pid
+
+    var parsedTorrent = magnet(magnetURI)
+
+    var opts = {
+        infoHash: parsedTorrent.infoHash,
+        announce: parsedTorrent.announce,
+        peerId: new Buffer(peer_id), // hex string or Buffer
+        port: 6881 // torrent client port
+    }
+
+    var client = new Tracker(opts)
+
+    client.scrape()
+
+    client.on('scrape', function (data) {
+        console.log("1")
+        res.write(JSON.stringify(data))      
+    })
+    //res.end()
 
 })
 

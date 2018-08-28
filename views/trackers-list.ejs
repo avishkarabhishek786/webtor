@@ -1,0 +1,45 @@
+<%include partials/header.ejs %>
+
+<div class="container">
+    <h1>Get list of trackers</h1>
+
+    <label for="pid">Peer Id:</label>
+    <input type="text" class="form-control" id="pid">
+
+    <label for="mag_url">Provide a valid magnetic url:</label>
+    <textarea id="mag_url" cols="30" rows="10" class="form-control"></textarea>
+
+    <button type="submit" id="btn-tk" class="btn btn-primary">Hit</button>
+
+    <div id="tl-res" style="padding: 5rem 5rem"></div>
+</div>
+
+<%include partials/footer.ejs %>
+
+<script>
+    $(document).on("click", "#btn-tk", function() {
+        var mag_url = $("#mag_url").val();
+        var job = "track list";
+        var pid = $("#pid").val();
+
+        $("#tl-res").text("Getting information from the server...it can takes few minutes.");
+
+        $.ajax({
+            url:'/trackers-list',
+            type:'post',
+            data:{job:job, mag_url:mag_url, pid:pid},
+            success: function(data) {
+                console.log(data);
+                if (data.length>0) {    
+                    $("#tl-res").text(data);
+                }
+            }, 
+            error: function(e) {
+                console.error(e);
+            }
+
+        })
+
+        
+    })
+</script>
