@@ -260,6 +260,9 @@ router.get('/trackers-list', (req, res)=>{
 })
 
 router.post('/trackers-list', (req, res)=>{
+    
+    require('events').EventEmitter.defaultMaxListeners = 100;
+
     let params = _.pick(req.body, ['job', 'mag_url', 'pid'])
     if (params.job!=="track list") {
         return;
@@ -279,14 +282,31 @@ router.post('/trackers-list', (req, res)=>{
 
     var client = new Tracker(opts)
 
+
+    // start getting peers from the tracker
+    client.start()
+
+    client.on('update', function (data) {
+        console.log('got an announce response from tracker: ' + data.announce)
+        console.log('number of seeders in the swarm: ' + data.complete)
+        console.log('number of leechers in the swarm: ' + data.incomplete)
+    })
+
+    setInterval(function() {
+        console.log('Searching for peers...');
+        client.once('peer', function (addr) {
+            console.log(`******* Found a peer: ${addr} *******`) // 85.10.239.191:48623
+        })
+    }, 60000);
+
     client.scrape()
 
     client.on('scrape', function (data) {
-        console.log("1")
-        res.write(JSON.stringify(data))      
+        res.write(JSON.stringify(data)) 
+        setInterval(function() {
+            res.end()   
+        }, 60000)     
     })
-    //res.end()
-
 })
 
 module.exports = router
