@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "bitcoin-core": "^2.0.0",
+    "bittorrent-dht": "^9.0.0",
     "bittorrent-tracker": "^9.10.1",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.1.3",
