@@ -4,15 +4,15 @@
     <div class="row">
         <div class="col-md-8">
             <!-- duckdns-> oVrbkDUrX727MjQd4zq7nRw1XEHkkpGErE -->
-            <label for="flo-addr">Enter the flo address (oHyzdt8xW1A81qcZ5VcM25RbC6RVbynAg4)</label>
-            <input type="text" id="flo-addr" class="form-control" />
+            <div class="form-group">
+                <label for="flo-addr">Enter the flo address (oHyzdt8xW1A81qcZ5VcM25RbC6RVbynAg4)</label>
+                <input type="text" id="flo-addr" class="form-control" />
+            </div>
 
-            <p><button id="flo-addr-btn" class="btn btn-primary">Get Torrents List</button></p>
+            <button id="flo-addr-btn" class="btn btn-primary mb-2">Get Torrents List</button>
 
-            <ul id="flo-res" class="list-group"></ul>  
+            <ul id="flo-res" class="t-2 list-group"></ul>  
 
-            <label for="mag_text">Provide a magnetic URL below:</label>
-            <p><button id="dwn-seed" class="btn btn-primary">View Torrent</button></p>
         </div>
 
         <div class="col-md-4">
@@ -67,6 +67,7 @@
                             t += `</li>`;   
                         }
                     }
+                    t += `<button id="dwn-seed" class="btn btn-primary">View Torrent</button>`;
                 }
                 $("#flo-res").html(t);
             },
