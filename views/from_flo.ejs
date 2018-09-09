@@ -1,22 +1,29 @@
 <%include partials/header.ejs %>
 
 <div class="container">
-    <!-- duckdns-> oVrbkDUrX727MjQd4zq7nRw1XEHkkpGErE -->
-    <label for="flo-addr">Enter the flo address (oSjBiuTE1aFNBjaSGq6UNhU9ddpD2YXdg8)</label>
-    <input type="text" id="flo-addr" class="form-control" />
+    <div class="row">
+        <div class="col-md-8">
+            <!-- duckdns-> oVrbkDUrX727MjQd4zq7nRw1XEHkkpGErE -->
+            <label for="flo-addr">Enter the flo address (oHyzdt8xW1A81qcZ5VcM25RbC6RVbynAg4)</label>
+            <input type="text" id="flo-addr" class="form-control" />
 
-    <p><button id="flo-addr-btn" class="btn btn-primary">Get Torrents List</button></p>
+            <p><button id="flo-addr-btn" class="btn btn-primary">Get Torrents List</button></p>
 
-    <ul id="flo-res"></ul>  
+            <ul id="flo-res" class="list-group"></ul>  
 
-    <label for="mag_text">Provide a magnetic URL below:</label>
-    <textarea class="form-control" id="mag_text" rows="3"></textarea>  
-    <p><button id="dwn-seed" class="btn btn-primary">View</button></p>
+            <label for="mag_text">Provide a magnetic URL below:</label>
+            <p><button id="dwn-seed" class="btn btn-primary">View Torrent</button></p>
+        </div>
 
-    <p id="dwld"></p>
-
-    <div class="pd-10">
-        <div id="mag-res"></div> 
+        <div class="col-md-4">
+            
+            <div class="mt-2 mb-2">
+                <p id="tmsg" class="text-info"></p>
+                <p id="dwld"></p>
+                <div id="mag-res"></div>
+            </div>
+        
+        </div>
     </div>
 
 </div>
@@ -38,23 +45,33 @@
             type: 'post',
             data: {job:job, floaddr:floaddr},
             success: function(response) {
-                console.log(response);
                 var t = '';
                 if (response.msg.length>0) {
-                    t += `<li><h5 class="text-info">${response.msg}</h5></li>`;
-                    t += ``;
+                    t += `<li class="list-group-item list-group-item-light"><h5 class="text-info">${response.msg}</h5></li>`;
                 }
 
                 if (response.error==false && typeof response.data != undefined) {
                     for (let fd = 0; fd < response.data.length; fd++) {
-                        const fdata = response.data[fd];
-                        t += `<li><p>${fdata}</p></li>`;
+                        if (response.data[fd][0] != null && response.data[fd][1] != null) {
+                            const fdata = response.data[fd];
+  
+                            t += `<li class="list-group-item">`;
+                            t += `<div class="input-group">`;
+                            t += `<div class="input-group-prepend">`;
+                            t += `<div class="input-group-text">`;
+                            t += `<input type="radio" name="magrads" value="${fdata[1]}" aria-label="Radio button for magnetic url">`;
+                            t += `</div>`;
+                            t += `</div>`;
+                            t += `<input type="text" value="${fdata[0]}" class="form-control" aria-label="Text input with radio button">`;
+                            t += `</div>`;
+                            t += `</li>`;   
+                        }
                     }
                 }
                 $("#flo-res").html(t);
             },
-            error: function() {
-
+            error: function(e) {
+                console.error(e);
             }
         });
     });
@@ -63,12 +80,15 @@
         
         var client = new WebTorrent()
 
-        var torrentId = document.getElementById('mag_text').value;
+        var torrentId = $('input[name=magrads]:checked').val();
 
         if (torrentId.trim() == '') {
             alert("Please specify a magnetic url.");
             return;
         }
+        torrentId = torrentId.replace("text:", "");
+
+        document.getElementById("tmsg").innerText = "The download link will appear here in few momments."
 
         client.add(torrentId, function (torrent) {
         // Torrents can contain many files. Let's use the .mp4 file
@@ -105,7 +125,7 @@
             var a = document.createElement('a')
             a.download = file.name
             a.href = url
-            a.textContent = 'Download ' + file.name
+            a.textContent = 'Download ' + file.name + ' (' +file.length/1000+ ' Kb)'
             document.getElementById("dwld").appendChild(a)
         })
 

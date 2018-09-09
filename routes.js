@@ -65,13 +65,30 @@ router.post('/download-magnetic-uri', (req, res)=>{
     var torrentId = params.torrentId
 
     if (_.trim(torrentId) == '') {
-        //alert("Please specify a magnetic url.");
         console.error("Empty torrent id");
         return;
     }
 
     client.add(torrentId, function (torrent) {
 
+        //torrent.on('wire', (wire)=>{
+          //  console.log(wire);
+            // console.log(wire._readableState.pipes.remoteAddress);
+            // console.log(wire._readableState.pipes.remoteFamily);
+            // console.log(wire._readableState.pipes.remotePort);
+            // console.log(wire._readableState.pipes.localAddress);
+            // console.log(wire._readableState.pipes.localPort);
+            
+             //console.log(wire._readableState.pipes._pc);
+
+
+            
+            // var id = wire.peerId.toString()
+            // var addr = wire.remoteAddress
+            // console.log(id);
+            // console.log(addr);
+        //})
+        
         var files = torrent.files
         var length = files.length
         // Stream each file to the disk
@@ -85,12 +102,6 @@ router.post('/download-magnetic-uri', (req, res)=>{
             
             source.on('end', function () {
                 console.log('file:\t\t', file.name)
-
-                // Seed file
-                client.seed(file, function (tor) {
-                    console.log(tor);
-                    console.log('Client is seeding ' + tor.magnetURI)
-                })
 
                 res.json({file:file.name, location:fullpath})
 
@@ -147,8 +158,8 @@ router.post('/send-to-blockchain', [
             res.json({error:true, "txnid":null, msg:'Magnetic uri is empty', data:null})
             return
         }
-
-        let toaddress = "oSjBiuTE1aFNBjaSGq6UNhU9ddpD2YXdg8";
+        
+        let toaddress = "oHyzdt8xW1A81qcZ5VcM25RbC6RVbynAg4";
         let amount = 1;
 
         try {
@@ -225,7 +236,7 @@ router.post('/fetch-from-blockchain', [
                 return tx_arr;
 
             }).then(tx_arr=>{
-                console.log(tx_arr); 
+                //console.log(tx_arr); 
                 let tor_arr = []
                 for (const tx in tx_arr) {
                     let promise = funcs.getFloData(_.trim(tx_arr[tx]))
@@ -239,8 +250,8 @@ router.post('/fetch-from-blockchain', [
                     })    
                     return msg_arr
                 }).then(flo_data=>{
-                    console.log(flo_data);
-                    res.json({error:false, msg:'floData fetching complete', data:flo_data})
+                    //console.log(flo_data);
+                    res.json({error:false, msg:'List of Torrent files:', data:flo_data})
                 })
             }).catch(e=>{
                 console.error(e)    

@@ -1,5 +1,6 @@
 const client = require('../../server')
 const _ = require('lodash')
+var magnet = require('magnet-uri')
 
 let getFloData = (tx) => {
     return new Promise((resolve, reject)=>{
@@ -11,7 +12,9 @@ let getFloData = (tx) => {
             }
             return res;
         }).then(response=>{
-            return resolve(response.floData)
+            var parsedTorrent = magnet(response.floData)
+            let resp = [parsedTorrent.name, response.floData]
+            return resolve(resp)
         })
         } catch (error) {
             return reject(error)
